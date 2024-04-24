@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <math.h>
+
+double exact_solution(double t) {
+    return pow(t + 1, 2) - 0.5 * exp(t);
+}
+
+double f(double t, double y) {
+    return y - t * t + 1;
+}
+
+double second_derivative(double t, double y) {
+    return f(t, y) - 2 * t;
+}
+
+double lipschitz_constant(double t, double y) {
+    // Lipschitz constant for f(t, y) = y - t^2 + 1 is 1 (since it's linear in y)
+    return 1.0;
+}
+
+double max_second_derivative(double t_min, double t_max, double y_min, double y_max) {
+    // Compute the maximum absolute value of the second derivative over the interval
+    double max_val = fabs(second_derivative(t_min, y_min));
+    double temp_val;
+    for (double t = t_min; t <= t_max; t += 0.01) {
+        for (double y = y_min; y <= y_max; y += 0.01) {
+            temp_val = fabs(second_derivative(t, y));
+            if (temp_val > max_val) {
+                max_val = temp_val;
+            }
+        }
+    }
+    return max_val;
+}
+
+void euler_method(double h, double t_max, double y0) {
+    double t = 0.0;
+    double y = y0;
+    double error_bound, global_error;
+
+    printf("t\t\tExact Solution\t\tEuler's Method\t\tError\t\tError Bound\n");
+    printf("%.1f\t\t%.7f\t\t%.7f\t\t%.7f\t\t---\n", t, exact_solution(t), y, 0.0);
+
+    double L = lipschitz_constant(t, y);
+    double M = max_second_derivative(0, t_max, 0, exact_solution(t_max));
+
+    while (t < t_max) {
+        y += h * f(t, y);
+        t += h;
+        global_error = (M * h) / (2 * L) * (exp(L * t) - 1);
+        error_bound = exact_solution(t) - y;
+        printf("%.1f\t\t%.7f\t\t%.7f\t\t%.7f\t\t%.7f\n", t, exact_solution(t), y, error_bound, global_error);
+    }
+}
+
+int main() {
+    double h = 0.2; // Step size
+    double t_max = 2.0; // Upper limit of t
+    double y0 = 0.5; // Initial condition y(0)
+
+    euler_method(h, t_max, y0);
+
+    return 0;
+}
