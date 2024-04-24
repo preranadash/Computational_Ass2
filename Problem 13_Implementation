@@ -1,0 +1,27 @@
+# here I am implementing the RK6 method for the ode: dy/dt = -ayt with a = 0.01 and 0 <= t <= 30 
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+a = 0.01
+def f(t,y):
+    return -a*y*t
+
+t = 0
+y = 1
+nmax = 300
+h = 0.1
+
+solution_rk6 = rk6(f, t, y, nmax, h)
+#plot the analytical solution
+test_t = np.linspace(0, nmax*h, nmax+1)
+test_y = y*np.exp(-test_t**2*a/2)
+plt.plot(test_t, test_y,".", label = 'Exact Solution')
+ 
+plt.xlabel('t')
+plt.ylabel('y')
+
+plt.plot(solution_rk6[0], solution_rk6[1],'red', label = 'Solution using rk6')
+plt.legend()
+plt.show()
