@@ -1,0 +1,19 @@
+# Part 2 of Problem 1:
+
+def f(x,y):
+    return -20*(y-x)**2 + 2*x
+
+x = 0
+y = 1/3
+nmax = 100
+h = 0.01
+solution = eulerode (f, x, y, nmax, h)
+
+#plot the analytical solution
+#test_x = np.linspace(0, nmax*h, nmax)
+#test_y = np.exp(1-9*test_x)
+#plt.plot(test_x, test_y,'red')
+ 
+plt.xlabel('x')
+plt.ylabel('y')
+plt.scatter(solution[0], solution[1])
