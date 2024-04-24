@@ -1,0 +1,26 @@
+# here I am defining 6th order RK method to solve ODE
+
+def rk6(f, t0, y0, nmax, h):
+    y = y0
+    t = t0
+    t_values = [t]
+    y_values = [y]
+    
+    for i in range (nmax):
+        k1 = h * f(t,y)
+        k2 = h * f(t + h/3,y + k1/3)
+        k3 = h * f(t + 2*h/3,y + 2*k2/3)
+        k4 = h * f(t + h/3,y + (k1+4*k2-k3)/12)
+        k5 = h * f(t + h/2,y + (-k1+18*k2-3*k3-6*k4)/16)
+        k6 = h * f(t + h/2,y + (9*k2-3*k3-6*k4+4*k5)/8)
+        k7 = h * f(t + h,y + (9*k1-36*k2+63*k3+72*k4-64*k5)/44)
+        k = (11*k1 + 81*k3 + 81*k4 - 32*k5 -32*k6 + 11*k7)/120
+        y = y + k
+        t = t + h
+        t_values.append(t)
+        y_values.append(y)
+    
+    return np.array([t_values,y_values])
+
+
+# This algorithm evaluates f(t,y) seven times in each step
