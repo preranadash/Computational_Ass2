@@ -1,0 +1,29 @@
+# Defining RK4 algorithm
+def rk4(f1, f2, t0, y0, z0, nmax, h):
+    y = y0
+    z = z0
+    t = t0
+    t_values = [t]
+    y_values = [y]
+    z_values = [z]
+    for i in range (nmax):
+        k1y = h * f1(t,y,z)
+        k1z = h * f2(t,y,z)
+        k2y = h * f1(t + h/2,y + k1y/2, z + k1z/2)
+        k2z = h * f2(t + h/2,y + k1y/2, z + k1z/2)
+        k3y = h * f1(t + h/2,y + k2y/2, z + k2z/2)
+        k3z = h * f2(t + h/2,y + k2y/2, z + k2z/2)
+        k4y = h * f1(t + h,y + k3y, z + k3z)
+        k4z = h * f2(t + h,y + k3y, z + k3z)
+        ky = 1/6*k1y + 1/3*k2y + 1/3*k3y + 1/6*k4y
+        kz = 1/6*k1z + 1/3*k2z + 1/3*k3z + 1/6*k4z
+   
+        
+        y = y + ky
+        z = z + kz
+        t = t + h
+        t_values.append(t)
+        y_values.append(y)
+        z_values.append(z)
+    
+    return np.array([t_values,y_values,z_values])
