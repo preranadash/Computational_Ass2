@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+g = 9.8
+tf = 10
+t = np.linspace(0, tf, 51)
+h = tf / 50
+
+y_exact = -(g * t ** 2)/2 + 5 * g * t
+
+# Candidate solutions
+num_candidates = 5
+y_candidates = []
+
+# Initialize first candidate as zeros
+y = np.zeros(51)
+
+# Save the initial candidate solution
+y_candidates.append(y)
+
+for i in range(1, num_candidates):
+    # Copy the previous candidate
+    y = y_candidates[-1].copy()
+    for _ in range(10**6):
+        y_last = y.copy()
+        for j in range(1, len(y) - 1):  # Loop through interior points
+            y[j] = 0.5 * (y[j + 1] + y[j - 1]) + 0.5 * g * h**2
+        if np.max(np.abs(y - y_last)) < 1e-6:  # tolerance
+            print(f"Candidate {i} converged after {_+1} steps.")
+            break
+    else:
+        print(f"Candidate {i} failed to converge.")
+    # Save the candidate solution
+    y_candidates.append(y)
+
+# Plotting
+plt.figure(figsize=(10, 6))
+for i, y_cand in enumerate(y_candidates):
+    plt.plot(t, y_cand, '.', label=f"Candidate {i+1}")
+
+plt.plot(t, y_exact, 'r', label='Exact Solution')
+plt.xlabel('Time')
+plt.ylabel('Height')
+plt.title('Numerical Relaxation Method')
+plt.legend()
+plt.grid(True)
+plt.show()
