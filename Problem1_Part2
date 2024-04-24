@@ -1,5 +1,9 @@
 # Part 2 of Problem 1:
 
+import numpy as np
+from scipy.integrate import solve_bvp
+import matplotlib.pyplot as plt
+
 def f(x,y):
     return -20*(y-x)**2 + 2*x
 
