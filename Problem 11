@@ -1,3 +1,7 @@
+import numpy as np
+from scipy.integrate import solve_bvp
+import matplotlib.pyplot as plt
+
 def f_ODE(t, x):
     return 1/(x**2 + t**2)
 
