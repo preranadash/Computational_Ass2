@@ -1,0 +1,18 @@
+import numpy as np
+from scipy import integrate 
+import matplotlib.pyplot as plt
+
+def f_ODE(t, y):
+    return t * np.exp(3 * t) - 2 * y
+
+t = 0
+y = 0
+
+test_t = np.linspace(0, 1, 200)
+test_y = (1 / 25) * np.exp(-2 * test_t) * (1 - np.exp(5 * test_t) + 5 * np.exp(5 * test_t) * test_t)
+
+plt.plot(test_t, test_y, 'red', label='Analytical Solution')
+
+solution_RK45 = integrate.solve_ivp(f_ODE, [0, 1], [0], method='RK45', t_eval=np.linspace(0, 1, 201))
+plt.scatter(solution_RK45.t, solution_RK45.y[0], label = 'numerical solution')
+plt.legend()
