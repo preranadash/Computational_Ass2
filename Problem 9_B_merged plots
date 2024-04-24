@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_bvp
+import matplotlib.image as mpimg
+
+# Define the differential equation as a first-order system
+def fun(x, y):
+    return np.vstack((y[1], y[1] * np.cos(x) - y[0] * np.log(y[0])))
+
+# Define the boundary conditions
+def bc(ya, yb):
+    return np.array([ya[0] - 1, yb[0] - np.exp(1)])
+
+# Define the x values
+x_values = np.linspace(0, np.pi/2, 100)
+
+# Solve the differential equation numerically
+y_numeric = solve_bvp(fun, bc, x_values, np.ones((2, len(x_values))))
+
+# Plot the numerical solution
+plt.plot(x_values, y_numeric.sol(x_values)[0], label='Numerical Solution', color='blue')
+
+# Load and display the saved plot image from Mathematica
+img_mathematica = mpimg.imread('analyticalB.png')
+plt.imshow(img_mathematica, extent=[0, np.pi/2, np.min(y_numeric.sol(x_values)[0]), np.max(y_numeric.sol(x_values)[0])], aspect='auto', alpha=0.5)
+
+# Set plot labels and title
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Comparison of Numerical and Analytical Solutions')
+plt.legend(['Numerical Solution', 'Analytical Solution'])
+plt.grid(True)
+plt.show()
