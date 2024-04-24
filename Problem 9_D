@@ -1,3 +1,4 @@
+# Part D
 import numpy as np
 from scipy.integrate import solve_bvp
 import matplotlib.pyplot as plt
@@ -16,22 +17,18 @@ y_guess[1] = 0  # initial guess for y'
 
 sol = solve_bvp(fun, bc, x, y_guess)
 
-# Plot the solution
+# Plot the numerical solution
 plt.plot(sol.x, sol.y[0], label='Numerical Solution')
+
+# analytical solution
+test_x = np.linspace(0, np.pi, 100)
+test_y = 2 + np.sin(test_x)
+
+plt.plot(test_x, test_y, 'r',  label='Analytical Solution')
+plt.scatter([0, np.pi], [2, 2], color='b', label='Boundary Conditions')
 plt.xlabel('x')
 plt.ylabel('y')
 
 plt.legend()
 plt.grid(True)
-plt.show()
-
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-
-# Load the saved plot image
-img = mpimg.imread('analyticalD.png')
-
-# Display the image
-plt.imshow(img)
-plt.axis('off')  # Turn off axis labels and ticks
 plt.show()
