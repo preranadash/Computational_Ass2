@@ -1,0 +1,19 @@
+import numpy as np
+from scipy import integrate, interpolate
+
+def f_ODE(t, x):
+    return 1/(x**2 + t**2)
+
+t = 0
+x = 1
+
+solution_RK45 = integrate.solve_ivp(f_ODE, [0, 3500000], [1], method='RK45')
+
+# Interpolate the solution
+interp_func = interpolate.interp1d(solution_RK45.t, solution_RK45.y[0])
+
+# Find the value at t = 3.5 × 10^6
+t_value = 3.5e6
+x_value = interp_func(t_value)
+print("The value of the solution at t = 3.5e6 is:", x_value)
+# EXACT VALUE OF X AT THIS t IS 2.1440757064931217.
