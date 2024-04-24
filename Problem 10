@@ -1,0 +1,59 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def rk4_step(func, t, y, h):
+    """Perform a single step of the fourth-order Runge-Kutta method."""
+    k1 = h * func(t, y)
+    k2 = h * func(t + 0.5*h, y + 0.5*k1)
+    k3 = h * func(t + 0.5*h, y + 0.5*k2)
+    k4 = h * func(t + h, y + k3)
+    return y + (k1 + 2*k2 + 2*k3 + k4) / 6
+
+def adaptive_rk4(func, t_span, y0, tol):
+    """Solve an ODE using adaptive step-size control with RK4."""
+    t_values = [t_span[0]]
+    y_values = [y0]
+    t = t_span[0]
+    y = y0
+    h = 0.01  # Initial step size
+    while t < t_span[1]:
+        # Perform one step with the current step size
+        y_next = rk4_step(func, t, y, h)
+        
+        # Perform two half steps with half the step size
+        y_half1 = rk4_step(func, t, y, h/2)
+        y_half2 = rk4_step(func, t + h/2, y_half1, h/2)
+        
+        # Estimate the error
+        error = np.abs(y_half2 - y_next)
+        
+        # Update the solution if the error is below the tolerance
+        if np.max(error) < tol:
+            t += h
+            y = y_half2
+            t_values.append(t)
+            y_values.append(y)
+        
+        # Adjust the step size based on the error
+        h *= min(5, 0.9 * (tol / np.max(error))**0.2)  # Safety factor: 0.9
+        
+    return np.array(t_values), np.array(y_values)
+
+# Define the ODE function
+def func(t, y):
+    return (y**2 + y) / t
+
+# Define the initial conditions and time span
+y0 = -2.0
+t_span = (1.0, 3.0)
+
+# Solve the ODE with adaptive step-size control
+t_values, y_values = adaptive_rk4(func, t_span, y0, tol=1e-4)
+
+# Plot the solution and mesh points
+plt.plot(t_values, y_values, marker='o', linestyle='-')
+plt.xlabel('t')
+plt.ylabel('y')
+plt.title('Solution of y\' = (y^2 + y) / t with Adaptive RK4')
+plt.grid(True)
+plt.show()
