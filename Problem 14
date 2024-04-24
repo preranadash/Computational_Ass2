@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+# Analytical solution
+test_t = np.linspace(1, 2, 100)  # Avoiding log(0)
+test_y = 7*test_t/4 + (test_t**3 /2)*np.log(test_t) - (3/4)*test_t**3
+plt.plot(test_t, test_y, 'r.', label='Analytical Solution')
+
+# Define the system of first-order ODEs
+def equations(t, y):
+    y1, y2 = y
+    dy1_dt = y2
+    dy2_dt = (2*t*y2 - 2*y1 + t**3 * np.log(t)) / (t**2)
+    return [dy1_dt, dy2_dt]
+
+# Define initial conditions
+t0 = 1
+y0 = [1, 0]  # y(1) = 1, y'(1) = 0
+
+# Define step size
+h = 0.001
+
+# Define range of t values
+t_range = np.arange(t0, 2+h, h)
+
+# Initialize arrays to store solutions
+y1_values = [y0[0]]
+y2_values = [y0[1]]
+
+# Apply Euler's method
+for t in t_range[:-1]:
+    y1, y2 = y0
+    dy1_dt, dy2_dt = equations(t, y0)
+    y1_new = y1 + h * dy1_dt
+    y2_new = y2 + h * dy2_dt
+    y0 = [y1_new, y2_new]
+    y1_values.append(y1_new)
+    y2_values.append(y2_new)
+
+# Plot the solution
+plt.plot(t_range, y1_values, label='y(t)')
+plt.xlabel('t')
+plt.ylabel('y')
+plt.title("Approximate Solution using Euler's Method")
+plt.legend()
+plt.grid(True)
+plt.show()
