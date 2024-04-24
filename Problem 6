@@ -1,0 +1,38 @@
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+t = np.linspace(0, 10, 50)
+g = 10
+
+# Define the exact solution function
+def f_exact(t):
+    return -(g * t ** 2)/2 + 5 * g * t
+
+# Plot the exact solution
+test_t = t
+test_x = f_exact(test_t)
+plt.plot(test_t, test_x, 'green', label='Exact solution')
+
+# Loop over a range of values
+for i in range(10):
+    def equations(t, x):
+        xprime = np.zeros(2)
+        xprime[0] = x[1]
+        xprime[1] = -10
+        return xprime
+
+    tspan = (t[0], t[-1])
+    x0 = [0, 50+i]  # Adjust the initial condition for each iteration
+
+    sol = solve_ivp(equations, tspan, x0, t_eval=t)
+
+    x_num = sol.y[0, :]
+
+    plt.plot(t, x_num, label=f'Numerical solution {i}', alpha=0.3)  # Use different shades of green for each iteration
+
+plt.plot([0, 10], [0, 0], 'bo', label='Boundary conditions')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
