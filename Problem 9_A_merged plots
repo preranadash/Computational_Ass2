@@ -1,0 +1,37 @@
+import numpy as np
+from scipy.integrate import solve_bvp
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+def fun(x, y):
+    return np.vstack((y[1], -np.exp(-2*y[0])))
+
+def bc(ya, yb):
+    return np.array([ya[0], yb[0] - np.log(2)])
+
+# Generate x values for plotting
+x_numerical = np.linspace(1, 2, 100)
+
+# Solve the boundary value problem numerically
+x_range = np.linspace(1, 2, 100)
+y_guess = np.zeros((2, x_range.size))
+sol = solve_bvp(fun, bc, x_range, y_guess)
+
+# Plot the numerical solution
+plt.plot(x_numerical, sol.sol(x_numerical)[0], label='Numerical Solution')
+
+# Load and display the analytical solution plot from Mathematica
+img = mpimg.imread('analyticalA.png')
+
+# Manually adjust the extent to coincide the origins
+extent = [1, 2, np.min(sol.sol(x_numerical)[0]), np.max(sol.sol(x_numerical)[0])]
+extent_analytical = [1, 2, np.min(sol.sol(x_numerical)[0]), np.max(sol.sol(x_numerical)[0])]  # Adjust y-axis limits if needed
+
+plt.imshow(img, extent=extent_analytical, aspect='auto')
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Comparison of Numerical and Analytical Solutions')
+plt.legend(['Numerical Solution', 'Analytical Solution'])
+plt.grid(True)
+plt.show()
