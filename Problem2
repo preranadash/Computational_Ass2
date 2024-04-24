@@ -1,1 +1,28 @@
+def f(t, y):
+    return (y / t) - (y / t) ** 2
 
+t = 1
+y = 1
+nmax = 20
+h = 0.1
+solution = eulerode(f, t, y, nmax, h)
+
+# Plot the analytical solution
+test_t = np.linspace(1, nmax * h, nmax+1)
+test_y = test_t / (1 + np.log(test_t))
+plt.plot(test_t, test_y, '.', label='Analytical Solution')
+
+plt.xlabel('t')
+plt.ylabel('y')
+
+# Plot the numerical solution
+plt.plot(solution[0], solution[1], 'red',label='Numerical Solution')  
+
+# Plot the absolute error
+plt.plot(test_t, np.abs(test_y - solution[1]), 'green', label='Absolute Error')
+
+# Plot the relative error
+plt.plot(test_t, np.abs((test_y - solution[1]) / test_y), 'violet', label='Relative Error')
+
+plt.legend()
+plt.show()
