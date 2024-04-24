@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+
+double exact_solution(double t) {
+    return pow(t + 1, 2) - 0.5 * exp(t);
+}
+
+double euler_method(double t0, double y0, double h, double t_final) {
+    double t = t0;
+    double y = y0;
+    while (t <= t_final) {
+        printf("t = %f, y = %f\n", t, y);
+        y = y + h * (y - pow(t, 2) + 1);
+        t += h;
+    }
+    return y;
+}
+
+int main() {
+    double t0 = 0.0;
+    double y0 = 0.5;
+    double h = 0.2;
+    double t_final = 2.0;
+
+    printf("Numerical Solution (Euler's Method):\n");
+    double numerical_y = euler_method(t0, y0, h, t_final);
+
+    printf("\nExact Solution:\n");
+    printf("t = %f, y = %f\n", t_final, exact_solution(t_final));
+
+    printf("\nComparison:\n");
+    printf("Numerical Solution at t = %f: %f\n", t_final, numerical_y);
+    printf("Exact Solution at t = %f: %f\n", t_final, exact_solution(t_final));
+
+    return 0;
+}
