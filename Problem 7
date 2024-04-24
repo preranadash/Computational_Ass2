@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+g = 9.8
+tf = 10
+t = np.linspace(0, tf, 51)
+h = tf / 50
+
+y = np.zeros(51)  # must include BCs
+
+y[0] = 0  # Boundary condition at t = 0
+y[-1] = 0  # Boundary condition at t = tf
+
+for i in range(10**6):
+    y_last = y.copy()
+    for j in range(1, len(y) - 1):  # Loop through interior points
+        y[j] = 0.5 * (y[j + 1] + y[j - 1]) + 0.5 * g * h**2
+    if np.max(np.abs(y - y_last)) < 1e-6:  # tolerance
+        print(f"Solution converged after {i+1} steps.")
+        break
+else:
+        print("Solution failed to converge.")
+
+        
+def f_exact(t):
+    return -(g * t ** 2)/2 + 5 * g * t
+
+# Plot the exact solutions
+t = np.linspace(0, 10, 51)
+test_t = t
+test_x = f_exact(test_t)
+plt.plot(test_t, test_x, 'red', label='Exact Solution' )
+# Plot the numerical solution through relaxation method
+plt.plot(t,y,".", label = 'Numerical Solution')
+plt.legend()
+plt.show()
