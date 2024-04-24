@@ -1,3 +1,4 @@
+# Part C
 import numpy as np
 from scipy.integrate import solve_bvp
 import matplotlib.pyplot as plt
@@ -16,8 +17,15 @@ y_guess[1] = 0  # initial guess for y'
 
 sol = solve_bvp(fun, bc, x, y_guess)
 
-# Plot the solution
-plt.plot(sol.x, sol.y[0], label='Numerical Solution')
+# Plot the numerical solution
+plt.plot(sol.x, sol.y[0], label='Numerical Solution', color='green')
+
+# analytical solution
+test_x = np.linspace(np.pi/4, np.pi/3, 100)
+test_y = np.sqrt(np.sin(test_x))
+
+plt.plot(test_x, test_y, 'r',  label='Analytical Solution')
+plt.scatter([np.pi/4, np.pi/3], [2**(-1/4), 12**(1/4)/2], label='Boundary Conditions')
 plt.xlabel('x')
 plt.ylabel('y')
 
